@@ -1,3 +1,8 @@
+"""CLI for chain.
+
+This module is not intended to be used programmatically - if this is something you want, use chain.client instead.
+"""
+
 import click
 
 from chain.chain import ChainClient, Frequency, NoChainExistsException, ChainExistsException
@@ -8,6 +13,9 @@ DEFAULT_DATA_PATH = '~/.chain/chains.json'
 # pylint: disable=C0103
 pass_chain_context = click.make_pass_decorator(ChainClient)
 
+
+# No docstrings for these, as they are not meant to be called.
+# pylint: disable=missing-docstring
 
 @click.group()
 @click.option('--file', metavar='FILE', help='Data file path, default is ~/.chain/chains.json', type=click.Path(),
@@ -27,14 +35,17 @@ def cli(ctx, file):
 @click.option('--description', help='Description of this chain', default='')
 @pass_chain_context
 def new_chain(client, name, daily, weekly, monthly, required, description):
-    frequency = Frequency.daily
     if [daily, weekly, monthly].count(True) > 1:
         raise click.BadArgumentUsage('One and only one of --daily, --weekly, --monthly must be set.')
 
+    # Pylint has bugs with enums
+    # pylint: disable=redefined-variable-type
     if weekly:
         frequency = Frequency.weekly
     elif monthly:
         frequency = Frequency.monthly
+    else:
+        frequency = Frequency.daily
 
     try:
         client.new_chain(name, frequency=frequency, description=description, num_required=required)

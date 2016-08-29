@@ -1,3 +1,5 @@
+"""Client for chain"""
+
 import json
 from enum import Enum
 
@@ -13,11 +15,13 @@ class Frequency(Enum):
 
 class ChainExistsException(Exception):
     def __init__(self, name):
+        Exception.__init__(self)
         self.message = 'Chain {} already exists'.format(name)
 
 
 class NoChainExistsException(Exception):
     def __init__(self, name):
+        Exception.__init__(self)
         self.message = 'No Chain named {} exists'.format(name)
 
 
@@ -44,6 +48,10 @@ def _ensure_chain_file(file_path):
 
 
 class ChainClient(object):
+    """Main client for chain
+
+        :param chain_file_path: The path to the chain file to update
+    """
     def __init__(self, chain_file_path):
         self._chain_file_path = os.path.expanduser(chain_file_path)
 
@@ -54,6 +62,14 @@ class ChainClient(object):
             json.dump(chains, f, indent=4, separators=[',', ': '])
 
     def new_chain(self, name, frequency, description, num_required):
+        """Create a new chain
+
+        :param name: The name of the chain (case insensitive)
+        :param frequency: The frequency of the chain, using the chain.Frequency enum
+        :param description: The description of this chain
+        :param num_required: The number of links required for the chain to be considered unbroken
+        :return: The created chain
+        """
         with open(self._chain_file_path, 'r') as f:
             chains = json.load(f)
 
@@ -75,6 +91,13 @@ class ChainClient(object):
         return chain
 
     def add_link_to_chain(self, name, number=1, message=''):
+        """Adds a link to an existing chain
+
+        :param name: The name of the chain (case insensitive)
+        :param number: The number of links to add
+        :param message: The message to attach to the link(s)
+        :return: The updated chain
+        """
         with open(self._chain_file_path, 'r') as f:
             chains = json.load(f)
 
