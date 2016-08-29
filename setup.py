@@ -16,6 +16,6 @@ setup(
 
     entry_points='''
         [console_scripts]
-        chain=chain.chain:chain
+        chain=chain.cli:cli
     ''',
 )
