@@ -12,7 +12,7 @@ pass_chain_context = click.make_pass_decorator(ChainClient)
 @click.group()
 @click.option('--file', metavar='FILE', help='Data file path, default is ~/.chain/chains.json', type=click.Path(),
               default=DEFAULT_DATA_PATH)
-@click.version_option('0.0.1')
+@click.version_option('0.1.0')
 @click.pass_context
 def cli(ctx, file):
     ctx.obj = ChainClient(file)
