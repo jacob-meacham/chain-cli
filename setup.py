@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='chain',
-    version='0.1.0',
+    version='0.2.0',
     description='CLI and Python API for Chain',
     url='https://github.com/jacob-meacham/chain-cli',
     author='jemonjam',
@@ -11,7 +11,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'click==6.6'
+        'click==6.6',
+        'termcolor==1.1.0'
     ],
 
     entry_points='''
