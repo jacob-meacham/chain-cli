@@ -80,10 +80,11 @@ def add_link(client, name, num, message):
 
 @cli.command(name='ls', help='List chains')
 @click.option('-q', help='List name only', is_flag=True)
+@click.option('--prefix', help='List only those chains whose name matches this prefix')
 @pass_chain_context
-def list_chains(client, q):
+def list_chains(client, q, prefix):
     try:
-        chains = client.list_chains()
+        chains = [c for c in client.list_chains() if prefix is None or c['id'].startswith(prefix)]
         if q:
             for c in chains:
                 click.echo(c['id'])
