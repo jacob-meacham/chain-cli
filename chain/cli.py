@@ -17,8 +17,10 @@ DONT_BREAK_TEXT = colored("Don't break the chain!", 'red', attrs=['underline'])
 # pylint: disable=C0103
 pass_chain_context = click.make_pass_decorator(ChainClient)
 
+
 def _format_chain_name(name):
     return colored('"{}"'.format(name), 'green', attrs=['bold'])
+
 
 @click.group()
 @click.option('--file', metavar='FILE', help='Data file path, default is ~/.chain/chains.json', type=click.Path(),
@@ -61,7 +63,7 @@ def new_chain(client, name, title, daily, weekly, monthly, required, description
 
 @cli.command(name='add', help='add a link to the chain')
 @click.argument('name')
-@click.option('--num', help='Number of links to add', default=1)
+@click.option('--num', '-n', help='Number of links to add', default=1)
 @click.option('--message', '-m', help='Message attached to the added link', default='')
 @pass_chain_context
 def add_link(client, name, num, message):
@@ -71,7 +73,9 @@ def add_link(client, name, num, message):
         raise click.BadArgumentUsage(e.message)
 
     num_links_text = colored('{}'.format(num), "blue", attrs=['bold'])
-    click.echo('Added {} links to chain {}. {}'.format(num_links_text, _format_chain_name(name), DONT_BREAK_TEXT))
+    link_pluralization = 'link' if num == 1 else 'links'
+    click.echo('Added {} {} to chain {}. {}'.format(num_links_text, link_pluralization,
+                                                    _format_chain_name(name), DONT_BREAK_TEXT))
 
 
 @cli.command(name='ls', help='List chains')
