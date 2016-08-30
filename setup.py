@@ -11,7 +11,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'click==6.6'
+        'click==6.6',
+        'termcolor==1.1.0'
     ],
 
     entry_points='''

@@ -2,20 +2,23 @@
 
 This module is not intended to be used programmatically - if this is something you want, use chain.client instead.
 """
-
 import click
 
 from chain.chain import ChainClient, Frequency, NoChainExistsException, ChainExistsException
+from termcolor import colored
+
+# No docstrings for this file, as the functions are not meant to be called directly.
+# pylint: disable=missing-docstring
 
 DEFAULT_DATA_PATH = '~/.chain/chains.json'
+DONT_BREAK_TEXT = colored("Don't break the chain!", 'red', attrs=['underline'])
 
 # This is idiomatic for click
 # pylint: disable=C0103
 pass_chain_context = click.make_pass_decorator(ChainClient)
 
-
-# No docstrings for these, as they are not meant to be called.
-# pylint: disable=missing-docstring
+def _format_chain_name(name):
+    return colored('"{}"'.format(name), 'green', attrs=['bold'])
 
 @click.group()
 @click.option('--file', metavar='FILE', help='Data file path, default is ~/.chain/chains.json', type=click.Path(),
@@ -53,7 +56,7 @@ def new_chain(client, name, title, daily, weekly, monthly, required, description
     except ChainExistsException as e:
         raise click.BadArgumentUsage(e.message)
 
-    click.echo("New chain \"{}\" created. Don't break the chain!".format(name))
+    click.echo("New chain {} created. {}".format(_format_chain_name(name), DONT_BREAK_TEXT))
 
 
 @cli.command(name='add', help='add a link to the chain')
@@ -67,7 +70,8 @@ def add_link(client, name, num, message):
     except NoChainExistsException as e:
         raise click.BadArgumentUsage(e.message)
 
-    click.echo("Added {} links to chain \"{}\". Don't break the chain!".format(num, name))
+    num_links_text = colored('{}'.format(num), "blue", attrs=['bold'])
+    click.echo('Added {} links to chain {}. {}'.format(num_links_text, _format_chain_name(name), DONT_BREAK_TEXT))
 
 
 @cli.command(name='ls', help='List chains')
