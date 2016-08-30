@@ -3,9 +3,9 @@
 This module is not intended to be used programmatically - if this is something you want, use chain.client instead.
 """
 import click
+from termcolor import colored
 
 from chain.chain import ChainClient, Frequency, NoChainExistsException, ChainExistsException
-from termcolor import colored
 
 # No docstrings for this file, as the functions are not meant to be called directly.
 # pylint: disable=missing-docstring
