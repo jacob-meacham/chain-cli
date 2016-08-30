@@ -28,13 +28,14 @@ def cli(ctx, file):
 
 @cli.command(name='new', help='add a new chain')
 @click.argument('name')
-@click.option('--daily', is_flag=True, help='Add daily links')
+@click.option('--title', '-t', help='Title of this chain. If not specified, the title will be the name')
+@click.option('--daily', is_flag=True, help='Add daily links (Default)')
 @click.option('--weekly', is_flag=True, help='Add weekly links')
 @click.option('--monthly', is_flag=True, help='Add monthly links')
 @click.option('--required', help='Number of links required for the chain to be considered unbroken', default=1)
-@click.option('--description', help='Description of this chain', default='')
+@click.option('--description', '-d', help='Description of this chain', default='')
 @pass_chain_context
-def new_chain(client, name, daily, weekly, monthly, required, description):
+def new_chain(client, name, title, daily, weekly, monthly, required, description):
     if [daily, weekly, monthly].count(True) > 1:
         raise click.BadArgumentUsage('One and only one of --daily, --weekly, --monthly must be set.')
 
@@ -48,7 +49,7 @@ def new_chain(client, name, daily, weekly, monthly, required, description):
         frequency = Frequency.daily
 
     try:
-        client.new_chain(name, frequency=frequency, description=description, num_required=required)
+        client.new_chain(name, title=title, frequency=frequency, description=description, num_required=required)
     except ChainExistsException as e:
         raise click.BadArgumentUsage(e.message)
 
@@ -67,6 +68,23 @@ def add_link(client, name, num, message):
         raise click.BadArgumentUsage(e.message)
 
     click.echo("Added {} links to chain \"{}\". Don't break the chain!".format(num, name))
+
+
+@cli.command(name='ls', help='List chains')
+@click.option('-q', help='List name only', is_flag=True)
+@pass_chain_context
+def list_chains(client, q):
+    try:
+        chains = client.list_chains()
+        if q:
+            for c in chains:
+                click.echo(c['id'])
+        else:
+            for c in chains:
+                # TODO: List them using termtable
+                click.echo(c)
+    except NoChainExistsException as e:
+        raise click.BadArgumentUsage(e.message)
 
 
 if __name__ == '__main__':
