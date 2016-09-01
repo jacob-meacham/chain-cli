@@ -83,12 +83,13 @@ class ChainClient(object):
             raise ChainExistsException(name)
 
         chain = {
-            "id": name,
-            "title": title,
-            "frequency": frequency.name,
-            "description": description,
-            "required": num_required,
-            "links": []
+            'id': name,
+            'title': title,
+            'frequency': frequency.name,
+            'description': description,
+            'required': num_required,
+            'links': [],
+            'creationTime': int(time.time())
         }
 
         chains.append(chain)
