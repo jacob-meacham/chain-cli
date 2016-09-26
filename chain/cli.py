@@ -25,7 +25,7 @@ def _format_chain_name(name):
 @click.group()
 @click.option('--file', metavar='FILE', help='Data file path, default is ~/.chain/chains.json', type=click.Path(),
               default=DEFAULT_DATA_PATH)
-@click.version_option('0.3.1')
+@click.version_option('0.3.2')
 @click.pass_context
 def cli(ctx, file):
     ctx.obj = ChainClient(file)
