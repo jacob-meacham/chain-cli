@@ -96,6 +96,30 @@ def list_chains(client, q, prefix):
         raise click.BadArgumentUsage(e.message)
 
 
+@cli.command(name='archive', help='Archive a chain')
+@click.argument('name')
+@pass_chain_context
+def archive_chain(client, name):
+    try:
+        client.archive_chain(name)
+    except NoChainExistsException as e:
+        raise click.BadArgumentUsage(e.message)
+
+    click.echo('Archived chain {}'.format(_format_chain_name(name)))
+
+
+@cli.command(name='rm', help='Remove a chain')
+@click.argument('name')
+@pass_chain_context
+def remove_chain(client, name):
+    try:
+        client.remove_chain(name)
+    except NoChainExistsException as e:
+        raise click.BadArgumentUsage(e.message)
+
+    click.echo('Removed chain {}'.format(_format_chain_name(name)))
+
+
 if __name__ == '__main__':
     # pylint: disable=E1120
     cli()

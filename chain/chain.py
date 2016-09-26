@@ -134,3 +134,52 @@ class ChainClient(object):
 
         self._update_chains(chains)
         return updated_chain
+
+    def archive_chain(self, name):
+        """Archives an existing chain
+
+        :param name: The name of the chain (case insensitive)
+        :return: The updated chain
+        """
+        name = name.lower()
+
+        with open(self._chain_file_path, 'r') as f:
+            chains = json.load(f)
+
+        # Find the correct chain
+        chain_to_update = [(i, c) for i, c in enumerate(chains) if c['id'] == name]
+        if len(chain_to_update) == 0:
+            raise NoChainExistsException(name)
+
+        # Just take the first chain, if there are multiple.
+        index, updated_chain = chain_to_update[0]
+        updated_chain['archiveTime'] = int(time.time())
+
+        chains[index] = updated_chain
+
+        self._update_chains(chains)
+        return updated_chain
+
+    def remove_chain(self, name):
+        """Removes an existing chain
+
+        :param name: The name of the chain (case insensitive)
+        :return: The removed chain
+        """
+        name = name.lower()
+
+        with open(self._chain_file_path, 'r') as f:
+            chains = json.load(f)
+
+        # Find the correct chain
+        chain_to_update = [(i, c) for i, c in enumerate(chains) if c['id'] == name]
+        if len(chain_to_update) == 0:
+            raise NoChainExistsException(name)
+
+        # Just take the first chain, if there are multiple.
+
+        index, chain = chain_to_update[0]
+        del chains[index]
+
+        self._update_chains(chains)
+        return chain
